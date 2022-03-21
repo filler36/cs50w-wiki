@@ -1,0 +1,15 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Create new article
+{% endblock %}
+
+{% block body %}
+    <form action="/save_article">
+        <div style="margin:5px;">Title:
+        <input type="text" name="title"></div>
+        <div style="margin-left:5px;" >Content:</div>
+        <div><textarea name="content"></textarea></div>
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}

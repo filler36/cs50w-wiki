@@ -18,7 +18,7 @@ def wiki(request, article_title):
             "article_content": article_content
         })
     else:
-        return render(request, "encyclopedia/not_found.html", {
+        return render(request, "encyclopedia/error.html", {
             "article_title": article_title
         })
 
@@ -41,11 +41,34 @@ def search(request):
                 "entries": matching_articles,
             })
         else:
-            return render(request, "encyclopedia/not_found.html", {
-                "article_title": query_string
+            error_code = "404 Not found"
+            return render(request, "encyclopedia/error.html", {
+                "error_code": error_code,
+                "error_message": f"Requested page with article title '{query_string}' was not found"
             })
 
 
+def new(request):
+    return render(request, "encyclopedia/new_article.html")
+
+
+def save_article(request):
+    article_title = request.GET.get('title', None)
+    if article_title.lower() in list(map(str.lower, util.list_entries())):
+        error_code = "409 Conflict"
+        return render(request, "encyclopedia/error.html", {
+            "error_code": error_code,
+            "error_message": f"Article with provided title '{article_title}' is already exists"
+        })
+    else:
+        article_content = request.GET.get('content', None)
+        util.save_entry(article_title, article_content)
+
+        article_content = _get_article_content(article_title)
+        return render(request, "encyclopedia/article.html", {
+            "article_title": article_title,
+            "article_content": article_content
+        })
 
 
 def _get_article_content(article_title):
