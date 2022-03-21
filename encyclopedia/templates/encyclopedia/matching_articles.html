@@ -1,0 +1,12 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Matching articles
+{% endblock %}
+
+{% block body %}
+    <h1>Matching articles:</h1>
+    {% for entry in entries %}
+            <li><a href="wiki/{{ entry }}">{{ entry }}</a></li>
+    {% endfor %}
+{% endblock %}
