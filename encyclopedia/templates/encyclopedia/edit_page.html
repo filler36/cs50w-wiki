@@ -1,0 +1,14 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Edit page: {{ article_title }}
+{% endblock %}
+
+{% block body %}
+    <form action="/save_edited_article">
+        <div style="margin-left:5px;" >Content:</div>
+        <div><textarea name="content">{{ article_content }}</textarea></div>
+        <input type="hidden" name="title" value="{{ article_title }}">
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}

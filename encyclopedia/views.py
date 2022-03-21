@@ -1,6 +1,7 @@
 import markdown2
-from django.shortcuts import render
+import random
 
+from django.shortcuts import render
 from . import util
 
 
@@ -71,7 +72,39 @@ def save_article(request):
         })
 
 
+def edit_page(request):
+    article_title = request.GET.get('article_title')
+    article_content = _get_raw_article_content(article_title)
+    return render(request, "encyclopedia/edit_page.html", {
+        "article_title": article_title,
+        "article_content": article_content
+    })
+
+
+def save_edited_article(request):
+    article_title = request.GET.get('title', None)
+    article_content = request.GET.get('content', None)
+    util.save_entry(article_title, article_content)
+    article_content = _get_article_content(article_title)
+    return render(request, "encyclopedia/article.html", {
+        "article_title": article_title,
+        "article_content": article_content
+    })
+
+
+def random_article(request):
+    article_title = random.choice(util.list_entries())
+    article_content = _get_article_content(article_title)
+    return render(request, "encyclopedia/article.html", {
+        "article_title": article_title,
+        "article_content": article_content
+    })
+
+
 def _get_article_content(article_title):
     article_content_md = util.get_entry(article_title)
     return markdown2.markdown(article_content_md)
 
+
+def _get_raw_article_content(article_title):
+    return util.get_entry(article_title)
