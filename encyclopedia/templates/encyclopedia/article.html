@@ -6,5 +6,5 @@
 
 {% block body %}
     {{ article_content | safe  }}
-    <a href="/edit_page?article_title={{ article_title }}">Edit this page</a>
+    <a href="{% url 'edit_page' %}?article_title={{ article_title }}">Edit this page</a>
 {% endblock %}

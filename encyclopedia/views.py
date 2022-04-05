@@ -11,7 +11,7 @@ def index(request):
     })
 
 
-def wiki(request, article_title):
+def get_article(request, article_title):
     if article_title in util.list_entries():
         article_content = _get_article_content(article_title)
         return render(request, "encyclopedia/article.html", {
@@ -19,8 +19,11 @@ def wiki(request, article_title):
             "article_content": article_content
         })
     else:
+        error_code = "404 Not found"
         return render(request, "encyclopedia/error.html", {
-            "article_title": article_title
+            "article_title": article_title,
+            "error_code": error_code,
+            "error_message": f"Requested page with article title '{article_title}' does not exist"
         })
 
 
@@ -42,10 +45,10 @@ def search(request):
                 "entries": matching_articles,
             })
         else:
-            error_code = "404 Not found"
+            error_code = "Nothing found"
             return render(request, "encyclopedia/error.html", {
                 "error_code": error_code,
-                "error_message": f"Requested page with article title '{query_string}' was not found"
+                "error_message": f"Nothing was found for query '{query_string}'"
             })
 
 
