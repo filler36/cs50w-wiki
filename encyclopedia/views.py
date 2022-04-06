@@ -2,6 +2,9 @@ import markdown2
 import random
 
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from django.urls import reverse
 from . import util
 
 
@@ -57,7 +60,7 @@ def new(request):
 
 
 def save_article(request):
-    article_title = request.GET.get('title', None)
+    article_title = request.POST.get('title', None)
     if article_title.lower() in list(map(str.lower, util.list_entries())):
         error_code = "409 Conflict"
         return render(request, "encyclopedia/error.html", {
@@ -65,14 +68,10 @@ def save_article(request):
             "error_message": f"Article with provided title '{article_title}' is already exists"
         })
     else:
-        article_content = request.GET.get('content', None)
+        article_content = request.POST.get('content', None)
         util.save_entry(article_title, article_content)
 
-        article_content = _get_article_content(article_title)
-        return render(request, "encyclopedia/article.html", {
-            "article_title": article_title,
-            "article_content": article_content
-        })
+        return redirect('get_article', article_title=article_title)
 
 
 def edit_page(request):
@@ -85,23 +84,16 @@ def edit_page(request):
 
 
 def save_edited_article(request):
-    article_title = request.GET.get('title', None)
-    article_content = request.GET.get('content', None)
+    article_title = request.POST.get('title', None)
+    article_content = request.POST.get('content', None)
     util.save_entry(article_title, article_content)
-    article_content = _get_article_content(article_title)
-    return render(request, "encyclopedia/article.html", {
-        "article_title": article_title,
-        "article_content": article_content
-    })
+    return redirect('get_article', article_title=article_title)
 
 
 def random_article(request):
     article_title = random.choice(util.list_entries())
-    article_content = _get_article_content(article_title)
-    return render(request, "encyclopedia/article.html", {
-        "article_title": article_title,
-        "article_content": article_content
-    })
+    return redirect('get_article', article_title=article_title)
+
 
 
 def _get_article_content(article_title):

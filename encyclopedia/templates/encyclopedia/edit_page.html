@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block body %}
-    <form action="/save_edited_article">
+    <form action="/save_edited_article" method="post">
+        {% csrf_token %}
         <div style="margin-left:5px;" >Content:</div>
         <div><textarea name="content">{{ article_content }}</textarea></div>
         <input type="hidden" name="title" value="{{ article_title }}">
