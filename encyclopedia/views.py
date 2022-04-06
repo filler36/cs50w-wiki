@@ -2,9 +2,7 @@ import markdown2
 import random
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse
 from . import util
 
 
@@ -93,7 +91,6 @@ def save_edited_article(request):
 def random_article(request):
     article_title = random.choice(util.list_entries())
     return redirect('get_article', article_title=article_title)
-
 
 
 def _get_article_content(article_title):
